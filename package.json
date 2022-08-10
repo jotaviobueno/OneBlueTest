@@ -1,0 +1,29 @@
+{
+  "name": "onebluetest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jotaviobueno/OneBlueTest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jotaviobueno/OneBlueTest/issues"
+  },
+  "homepage": "https://github.com/jotaviobueno/OneBlueTest#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.5.2",
+    "nanoid": "^4.0.0",
+    "nodemon": "^2.0.19"
+  }
+}
