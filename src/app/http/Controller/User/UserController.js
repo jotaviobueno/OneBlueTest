@@ -35,9 +35,30 @@ class UserController {
         const session_token = await repository.createSession( email );
 
         if (session_token)
-            return await ResponseHelper.success( res, { success:  'login made', session_info: {email: session_token.email, session_token: session_token.session_token } });
+            return await ResponseHelper.success( res, { success:  'login made', session_token: session_token });
 
         return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+    }
+
+    async seeAccount ( req, res ) {
+        const { session_token } = req.headers;
+
+        const sessionInfo = await UserHelper.verifyToken( session_token );
+
+        if (! sessionInfo)
+            return await ResponseHelper.unprocessableEntity( res, { error:  "session not found" });
+        
+        const UserInfo = await UserHelper.existEmail( sessionInfo.email );
+
+        if (! UserInfo )
+            return await ResponseHelper.badRequest( res, { error:  "email not found" });
+
+        const returnAccount = await repository.returnAccount(UserInfo.email)
+
+        if (returnAccount)
+            return await ResponseHelper.success( res, {success: returnAccount});
+
+        return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });    
     }
 }
 

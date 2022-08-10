@@ -9,3 +9,4 @@ import UserRequest from '../Request/User/UserRequest.js';
 
 UserRoutes.post('/register', UserRequest.validateStorage, UserController.storageUser);
 UserRoutes.post('/login', UserRequest.validateLogin, UserController.login);
+UserRoutes.get('/my-account', UserController.seeAccount);

@@ -20,12 +20,20 @@ class repository {
     }
 
     async createSession ( email ) {
-        return true, await LoginModel.create({
+        const session_token = nanoid();
+
+        await LoginModel.create({
             email: email,
-            session_token: nanoid(),
+            session_token: session_token,
             login_made_in: new Date(),
             disconnected_in: null,
         });
+
+        return true, session_token;
+    }
+
+    async returnAccount ( email ) {
+        return true, await UserModel.findOne({ email: email, deleted_at: null }).select({ _id: 0, __v: 0, password: 0 });
     }
 
 }
