@@ -16,7 +16,28 @@ class UserController {
         if (await repository.storageUser( username, email, password ))
             return await ResponseHelper.created( res, { success:  "account created" });
 
-        return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });;
+        return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+    }
+
+    async login ( req, res ) {
+        const { email, password } = req.body;
+
+        const UserInfo = await UserHelper.existEmail( email );
+
+        if (! UserInfo)
+            return await ResponseHelper.badRequest( res, { error:  "email not found" });
+        
+        await UserHelper.verifySession(UserInfo.email);
+
+        if (! await UserHelper.comparePassword( password, UserInfo.password ))
+            return await ResponseHelper.notAuthorized( res, { error:  "credentials invalid" });
+
+        const session_token = await repository.createSession( email );
+
+        if (session_token)
+            return await ResponseHelper.success( res, { success:  'login made', session_info: {email: session_token.email, session_token: session_token.session_token } });
+
+        return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
     }
 }
 
