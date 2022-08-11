@@ -39,7 +39,7 @@ class UserHelper {
         return await bcrypt.compare( password, hash );
     }
 
-    async disconnectAllSession (email) {
+    async disconnectAllSession ( email ) {
         await LoginModel.updateMany({ email: email, disconnected_in: null}, {disconnected_in: new Date() });
     }
 

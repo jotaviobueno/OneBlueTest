@@ -14,3 +14,4 @@ UserRoutes.get('/my-account', UserRequest.validateSeeAccount, UserController.see
 UserRoutes.delete('/my-account/delete', UserRequest.validateDeleteAccount, UserController.delete);
 
 UserRoutes.patch('/my-account/change-name', UpdateController.name);
+UserRoutes.patch('/my-account/change-password', UpdateController.ChangePassword);
