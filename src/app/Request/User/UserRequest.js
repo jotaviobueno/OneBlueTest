@@ -24,6 +24,7 @@ class UserRequest {
         });
     
         try {
+
             await schemaBody.validate(req.body);
 
         } catch(err) {
@@ -48,6 +49,7 @@ class UserRequest {
         });
     
         try {
+
             await schemaBody.validate(req.body);
 
         } catch(err) {
@@ -68,7 +70,37 @@ class UserRequest {
         });
     
         try {
+
             await schemaHeaders.validate(req.headers);
+
+        } catch(err) {
+            return res.status(400).json({
+                message: err.errors
+            });
+        }
+       await next();
+    }
+
+    async validateDeleteAccount ( req, res, next ) {
+        req.headers;
+
+        const schemaHeaders = yup.object().shape({
+
+            session_token: yup.string ('session_token is not defined')
+            .required ("session_token not defined, please login again"),
+        });
+
+        const schemaBody =  yup.object().shape({
+            password: yup.string ('password is not defined')
+            .required ('the password is required')
+        });
+    
+    
+        try {
+
+            await schemaHeaders.validate(req.headers);
+
+            await schemaBody.validate(req.body);
 
         } catch(err) {
             return res.status(400).json({

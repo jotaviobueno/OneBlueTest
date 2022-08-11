@@ -75,7 +75,7 @@ class UserController {
         if (! UserInfo )
             return await ResponseHelper.badRequest( res, { error:  "email not found" });
 
-        if (! await UserHelper.comparePassword( password, UserInfo.password ) )
+        if (! await UserHelper.comparePassword( password, UserInfo.password ))
             return await ResponseHelper.notAuthorized( res, { error:  "credentials invalid" });
 
         if ( await repository.deleteAccount( UserInfo.email )) {
