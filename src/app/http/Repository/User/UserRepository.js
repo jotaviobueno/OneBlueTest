@@ -36,6 +36,12 @@ class repository {
         return true, await UserModel.findOne({ email: email, deleted_at: null }).select({ _id: 0, __v: 0, password: 0 });
     }
 
+    async deleteAccount (email) {
+        await UserModel.findOneAndUpdate({ email: email, deleted_at: null}, { update_at: new Date(), deleted_at: new Date() });
+
+        return true;
+    }
+
 }
 
 export default new repository();

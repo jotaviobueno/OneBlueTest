@@ -58,6 +58,25 @@ class UserRequest {
        await next();
     }
 
+    async validateSeeAccount ( req, res, next ) {
+        req.headers;
+
+        const schemaHeaders = yup.object().shape({
+
+            session_token: yup.string ('session_token is not defined')
+            .required ("session_token not defined, please login again"),
+        });
+    
+        try {
+            await schemaHeaders.validate(req.headers);
+
+        } catch(err) {
+            return res.status(400).json({
+                message: err.errors
+            });
+        }
+       await next();
+    }
 }
 
 export default new UserRequest();
