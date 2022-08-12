@@ -1,5 +1,6 @@
 // Model
 import TokensChangePasswordModel from '../../../Model/User/AuthToken/TokensChangePasswordModel.js';
+import TokensChangeEmailModel from '../../../Model/User/AuthToken/TokensChangeEmailModel.js';
 
 class AuthHelper {
     
@@ -8,7 +9,7 @@ class AuthHelper {
 
         findAllTokens.forEach( async (tokens) => {
             if ( new Date() >= tokens.token_expires_in )
-                await TokensChangePasswordModel.findOneAndUpdate({ token_to_change_email: tokens.token_to_change_email }, {status: false })
+                await TokensChangePasswordModel.findOneAndUpdate({ token: tokens.token }, {status: false })
         });
     }
 
@@ -17,6 +18,22 @@ class AuthHelper {
 
         if ( findAllUserToken.length >= 1 )
             await TokensChangePasswordModel.updateMany({ email: email }, { status: false });
+    }
+
+    async checkTheAmountOfTokenEmail ( email ) {
+        const findAllUserToken = await TokensChangeEmailModel.find({ email: email, status: null });
+
+        if ( findAllUserToken.length >= 1 )
+            await TokensChangeEmailModel.updateMany({ email: email }, { status: false });
+    }
+
+    async verifyEmailTokenExpiresDate ( ) {
+        const findAllTokens = await TokensChangeEmailModel.find({ status: null });
+
+        findAllTokens.forEach( async (tokens) => {
+            if ( new Date() >= tokens.token_expires_in )
+                await TokensChangeEmailModel.findOneAndUpdate({ token: tokens.token }, {status: false })
+        });
     }
 }
 

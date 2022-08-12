@@ -35,12 +35,16 @@ class AuthController {
         const { session_token } = req.headers;
         const { password } = req.body;
 
+        await AuthHelper.verifyEmailTokenExpiresDate( );
+
         const sessionInfo = await UserHelper.verifyToken( session_token );
 
         if (! sessionInfo )
             return await ResponseHelper.unprocessableEntity( res, { error:  "session not found" });
         
         const UserInfo = await UserHelper.existEmail( sessionInfo.email );
+
+        await AuthHelper.checkTheAmountOfTokenEmail( UserInfo.email );
 
         if (! UserInfo )
             return await ResponseHelper.badRequest( res, { error:  "email not found" });
