@@ -20,3 +20,4 @@ UserRoutes.patch( '/my-account/change-password', UpdateController.ChangePassword
 
 // GetToken
 UserRoutes.get( '/get-token/change-password', AuthController.generationTokenChangePassword );
+UserRoutes.get( '/get-token/change-email', AuthController.generationTokenChangeEmail );
