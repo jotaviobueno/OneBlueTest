@@ -3,6 +3,24 @@ import TokensChangePasswordModel from '../../../Model/User/AuthToken/TokensChang
 import TokensChangeEmailModel from '../../../Model/User/AuthToken/TokensChangeEmailModel.js';
 
 class AuthHelper {
+
+    async existEmailToken ( change_token ) {
+        const findToken = await TokensChangeEmailModel.findOne({ token: change_token, status: null });
+
+        if (findToken === null)
+            return false;
+        
+        return true, findToken;
+    }
+
+    async existPasswordToken ( change_token ) {
+        const findToken = await TokensChangePasswordModel.findOne({ token: change_token, status: null });
+
+        if (findToken === null)
+            return false;
+        
+        return true, findToken;
+    }
     
     async verifyTokenExpiresDate ( ) {
         const findAllTokens = await TokensChangePasswordModel.find({ status: null });

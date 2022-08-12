@@ -4,8 +4,10 @@ import UpdateNameLogModel from '../../../Model/User/Log/UpdateNameLogModel.js';
 import UpdatePasswordLogModel from '../../../Model/User/Log/UpdatePasswordLogModel.js';
 import UpdateEmailLogModel from '../../../Model/User/Log/UpdateEmailLogModel.js';
 import TokensChangeEmailModel from '../../../Model/User/AuthToken/TokensChangeEmailModel.js';
+import TokensChangePasswordModel from '../../../Model/User/AuthToken/TokensChangePasswordModel.js';
 
 // Dependencies
+import bcrypt from 'bcrypt';
 
 class repository {
 
@@ -24,7 +26,7 @@ class repository {
         return true;
     }
 
-    async createLog ( email ) {
+    async createLogUpdatePassword ( email ) {
         await UpdatePasswordLogModel.create({
             email: email,
             update_in: new Date()
@@ -32,18 +34,9 @@ class repository {
     }
 
     async updatePassword ( new_password, email ) {
-        await UserModel.findOne({ email: email, deleted_at: null }, { password: new_password, update_at: new Date() });
+        await UserModel.findOneAndUpdate({ email: email, deleted_at: null }, { password: await bcrypt.hash( new_password, 10), update_at: new Date() });
 
         return true;
-    }
-
-    async existToken ( changeToken ) {
-        const findToken = await TokensChangeEmailModel.findOne({ token: changeToken, status: null });
-
-        if (findToken === null)
-            return false;
-        
-        return true, findToken;
     }
 
     async ChangeEmail ( email, new_email ) {
@@ -60,11 +53,18 @@ class repository {
         });
     }
 
-    async deleteToken ( token ) {
+    async deleteEmailToken ( token ) {
         await TokensChangeEmailModel.findOneAndUpdate({ token: token, status: null }, { status: true });
 
         return true;
     }
+
+    async deletePasswordToken ( token ) {
+        await TokensChangePasswordModel.findOneAndUpdate({ token: token, status: null }, { status: true });
+
+        return true;
+    }
+
 }
 
 export default new repository();

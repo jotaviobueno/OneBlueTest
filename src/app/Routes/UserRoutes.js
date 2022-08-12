@@ -16,8 +16,9 @@ UserRoutes.delete( '/my-account/delete', UserRequest.validateDeleteAccount, User
 
 // Change
 UserRoutes.patch( '/my-account/change-name', UpdateController.name );
-UserRoutes.patch( '/my-account/change-password', UpdateController.ChangePassword );
+UserRoutes.patch( '/my-account/change-password', UpdateController.ChangePasswordV1 );
 UserRoutes.patch( '/change/email', UpdateController.changeEmail );
+UserRoutes.patch( '/change/password', UpdateController.changePasswordV2 );
 
 // GetToken
 UserRoutes.get( '/get-token/change-password', AuthController.generationTokenChangePassword );
