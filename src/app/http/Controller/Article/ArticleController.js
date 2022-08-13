@@ -87,7 +87,6 @@ class ArticleController {
 
         return await ResponseHelper.unprocessableEntity( res, { error: "unable to process request" }); 
     }
-
 }
 
 export default new ArticleController();
