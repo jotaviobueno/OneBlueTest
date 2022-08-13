@@ -21,7 +21,7 @@ class ArticleController {
         if (! UserInfo )
             return await ResponseHelper.badRequest( res, { error:  "email not found" });
 
-        const article_id = await repository.createArticle( UserInfo.email, article_title, article_text, author );
+        const article_id = await repository.createArticle( UserInfo.username, UserInfo.email, article_title, article_text, author );
 
         if ( article_id )
             return await ResponseHelper.success( res, { article_id: article_id._id });
@@ -60,6 +60,34 @@ class ArticleController {
 
         return await ResponseHelper.unprocessableEntity( res, { error: "unable to process request" }); 
     }
+
+    async findAllArticles ( req, res ) {
+        const allArticles = await repository.findAllArticles(  );
+
+        if ( allArticles )
+            return await ResponseHelper.success( res, { articles: allArticles });
+
+        return await ResponseHelper.unprocessableEntity( res, { error: "unable to process request" }); 
+    }
+
+    async findOneArticle ( req, res ) {
+        const { article_id } = req.headers;
+
+        const articleInfo = await ArticleHelper.existArticle( article_id );
+
+        if (! articleInfo )
+            return await ResponseHelper.unprocessableEntity( res, { error:  "article_id its not found" });
+        
+        const ArticleAllInfo = await repository.findOneArticle( article_id );
+
+        if ( ArticleAllInfo ) {
+            return await ResponseHelper.success( res, { articles: ArticleAllInfo }); 
+
+        }
+
+        return await ResponseHelper.unprocessableEntity( res, { error: "unable to process request" }); 
+    }
+
 }
 
 export default new ArticleController();

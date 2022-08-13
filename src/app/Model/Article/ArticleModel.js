@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 
 const ArticleModel = mongoose.model('article', {
 
+    username: { type: String, required: true },
     created_by_email: { type: String, required: true },
     article_title: { type: String, required: true },
     article_text: { type: String, required: true },
