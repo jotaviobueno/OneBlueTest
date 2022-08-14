@@ -95,7 +95,6 @@ class UserRequest {
             .required ('the password is required')
         });
     
-    
         try {
 
             await schemaHeaders.validate(req.headers);
