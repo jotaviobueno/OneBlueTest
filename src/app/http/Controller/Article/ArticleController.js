@@ -61,6 +61,46 @@ class ArticleController {
         return await ResponseHelper.unprocessableEntity( res, { error: "unable to process request" }); 
     }
 
+    async likeArticle ( req, res ) {
+        const { session_token, article_id } = req.headers;
+
+        const articleInfo = await ArticleHelper.existArticle( article_id );
+
+        if (! articleInfo )
+            return await ResponseHelper.unprocessableEntity( res, { error:  "article_id its not found" });
+
+        const sessionInfo = await UserHelper.verifyToken( session_token );
+
+        if (! sessionInfo )
+            return await ResponseHelper.unprocessableEntity( res, { error:  "session not found" });
+        
+        const UserInfo = await UserHelper.existEmail( sessionInfo.email );
+
+        if (! UserInfo )
+            return await ResponseHelper.badRequest( res, { error:  "email not found" });
+
+        const trueOrFalse = await repository.verifyArticleLike( UserInfo.email, article_id );
+
+        if ( trueOrFalse ) {
+
+            await repository.removeLike( articleInfo );
+
+            await repository.removeLogLike( article_id, UserInfo.email );
+            
+            return await ResponseHelper.success( res, { success:  "like removed" });
+        } 
+
+        if (! trueOrFalse ) {
+            await repository.addLike( articleInfo );
+
+            await repository.createLogAddLike( article_id, UserInfo.email );
+
+            return await ResponseHelper.success( res, { success:  "like added" });
+        }
+
+        return await ResponseHelper.unprocessableEntity( res, { error: "unable to process request" }); 
+    }
+
     async findAllArticles ( req, res ) {
         const allArticles = await repository.findAllArticles(  );
 
@@ -82,7 +122,6 @@ class ArticleController {
 
         if ( ArticleAllInfo ) {
             return await ResponseHelper.success( res, { articles: ArticleAllInfo }); 
-
         }
 
         return await ResponseHelper.unprocessableEntity( res, { error: "unable to process request" }); 

@@ -12,6 +12,7 @@ ArticleRoutes.delete( '/article/delete', ArticleRequest.validateDeleteArticle, A
 
 ArticleRoutes.get( '/article', ArticleController.findAllArticles );
 ArticleRoutes.get( '/article/find-one', ArticleRequest.validateFindOneArticle, ArticleController.findOneArticle );
+ArticleRoutes.get( '/article/add-like', ArticleRequest.validateAddLike, ArticleController.likeArticle );
 
 ArticleRoutes.post( '/article/change-title', UpdateArticleRequest.validateUpdateTitle, UpdateController.updateTitle );
 ArticleRoutes.post( '/article/change-text', UpdateArticleRequest.validateUpdateText, UpdateController.updateText );

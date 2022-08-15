@@ -1,5 +1,6 @@
 // Models
 import ArticleModel from '../../../Model/Article/ArticleModel.js';
+import ArticleLikeLogModel from '../../../Model/Article/Log/ArticleLikeLogModel.js';
 
 class repository {
 
@@ -37,6 +38,40 @@ class repository {
         } catch (e) {
             return false;
         }
+    }
+
+    async verifyArticleLike ( email, article_id ) {
+        const findLike = await ArticleLikeLogModel.findOne({ liked_by: email, article_id: article_id });
+
+        if ( findLike === null )
+            return false;
+        
+        return true;
+    }
+
+    async addLike ( articleInfo ) {
+        const sum = parseFloat( articleInfo.total_like ) + parseFloat( 1 );
+
+        await ArticleModel.findOneAndUpdate({ _id: articleInfo._id, deleted_at: null }, 
+            { update_at: new Date(), total_like: sum });
+    }
+
+    async createLogAddLike ( article_id, email ) {
+        await ArticleLikeLogModel.create({
+            liked_by: email,
+            article_id: article_id,
+        });
+    }
+
+    async removeLike ( articleInfo ) {
+        const removeLike = parseFloat( articleInfo.total_like ) - parseFloat( 1 );
+
+        await ArticleModel.findOneAndUpdate({ _id: articleInfo._id, deleted_at: null }, 
+            { update_at: new Date(), total_like: removeLike });
+    }
+
+    async removeLogLike ( article_id, email ) {
+        await ArticleLikeLogModel.findOneAndDelete({ liked_by: email, article_id: article_id });
     }
 }
 
